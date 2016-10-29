@@ -2,6 +2,8 @@ import pandas as pd
 import os, re
 from cryptography.fernet import Fernet
 
+from keputils import koiutils as ku, koiname
+
 from .cfg import DATADIR
 
 KEY = open(os.path.join(DATADIR,'fernet.key')).read()
@@ -52,6 +54,12 @@ class SpecTable(CryptTable):
         loggs = []
         fehs = []
         vsinis = []
+        Kmags = []
+        unc_Kmags = []
+        Jmags = []
+        unc_Jmags = []
+        Hmags = []
+        unc_Hmags = []
         for line in fstring.splitlines():
             line = line.split('&')
             m = re.search('(\d+)-(\w+)?', line[0])
@@ -62,7 +70,18 @@ class SpecTable(CryptTable):
             loggs.append(parse_cell(line[2]))
             fehs.append(parse_cell(line[3]))
             vsinis.append(parse_cell(line[4]))
+            s = ku.DATA.ix[koiname(m.group(1))]
+            Jmags.append(s.koi_jmag)
+            unc_Jmags.append(s.koi_jmag_err)
+            Hmags.append(s.koi_hmag)
+            unc_Hmags.append(s.koi_hmag_err)
+            Kmags.append(s.koi_kmag)
+            unc_Kmags.append(s.koi_kmag_err)
 
-        df = pd.DataFrame({'koi':kois, 'Teff':teffs, 'logg':loggs, 'feh':fehs, 'vsini':vsinis})
+        df = pd.DataFrame({'koi':kois, 'Teff':teffs, 'logg':loggs, 
+                        'feh':fehs, 'vsini':vsinis, 
+                        'J':Jmags, 'J_unc':unc_Jmags,
+                        'H':Hmags, 'H_unc':unc_Hmags,
+                        'K':Kmags, 'K_unc':unc_Kmags})
         df.index = df.koi
         return df

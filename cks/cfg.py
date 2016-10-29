@@ -1,3 +1,3 @@
 import os
 
-DATADIR = os.path.join(os.path.dirname(__file__), '..', 'data')
+DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
