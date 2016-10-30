@@ -23,7 +23,7 @@ def fit_model(mod, directory, overwrite=False):
     fig2.savefig(os.path.join(figdir, '{}-observed.png'.format(mod.name)))
 
     modeldir = os.path.join(directory, 'models')
-    mod.save_hdf(os.path.join(modeldir, '{}.h5'.format(mod.name)))
+    mod.save_hdf(os.path.join(modeldir, '{}.h5'.format(mod.name)), overwrite=True)
 
 if __name__=='__main__':
     import sys, os
