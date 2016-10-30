@@ -1,4 +1,4 @@
 import os
 
 DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
-CKSDIR = os.getenv('CKS', '~/.cks')
+CKSDIR = os.getenv('CKSDIR', '~/.cks')
