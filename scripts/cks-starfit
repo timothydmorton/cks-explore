@@ -30,6 +30,7 @@ if __name__=='__main__':
 
     from astropy import log as logger
     import logging
+    import time
 
     sys.path.append('..')
 
