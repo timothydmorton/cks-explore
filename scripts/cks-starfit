@@ -75,13 +75,17 @@ if __name__=='__main__':
     dar = get_ichrone('dartmouth', bands=['J','H','K'])
 
     dir1 = os.path.join(STARMODELDIR, 'mist-single')
-    os.makedirs(dir1)
+    if not os.path.exists(dir1):
+        os.makedirs(dir1)
     dir2 = os.path.join(STARMODELDIR, 'dar-single')
-    os.makedirs(dir2)
+    if not os.path.exists(dir2):
+        os.makedirs(dir2)
     dir3 = os.path.join(STARMODELDIR, 'mist-binary')
-    os.makedirs(dir3)
+    if not os.path.exists(dir3):
+        os.makedirs(dir3)
     dir4 = os.path.join(STARMODELDIR, 'dar-binary')
-    os.makedirs(dir4)
+    if not os.path.exists(dir4):
+        os.makedirs(dir4)
 
     N = len(args.stars)
     for i, star in enumerate(args.stars):
