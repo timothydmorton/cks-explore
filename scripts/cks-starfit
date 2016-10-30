@@ -77,15 +77,23 @@ if __name__=='__main__':
     dir1 = os.path.join(STARMODELDIR, 'mist-single')
     if not os.path.exists(dir1):
         os.makedirs(dir1)
+        os.makedirs(os.path.join(dir1, 'figures'))
+        os.makedirs(os.path.join(dir1, 'models'))
     dir2 = os.path.join(STARMODELDIR, 'dar-single')
     if not os.path.exists(dir2):
         os.makedirs(dir2)
+        os.makedirs(os.path.join(dir2, 'figures'))
+        os.makedirs(os.path.join(dir2, 'models'))
     dir3 = os.path.join(STARMODELDIR, 'mist-binary')
     if not os.path.exists(dir3):
         os.makedirs(dir3)
+        os.makedirs(os.path.join(dir3, 'figures'))
+        os.makedirs(os.path.join(dir3, 'models'))
     dir4 = os.path.join(STARMODELDIR, 'dar-binary')
     if not os.path.exists(dir4):
         os.makedirs(dir4)
+        os.makedirs(os.path.join(dir4, 'figures'))
+        os.makedirs(os.path.join(dir4, 'models'))
 
     N = len(args.stars)
     for i, star in enumerate(args.stars):
