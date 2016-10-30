@@ -83,7 +83,9 @@ if __name__=='__main__':
     dir4 = os.path.join(STARMODELDIR, 'dar-binary')
     os.makedirs(dir4)
 
-    for star in args.stars:
+    N = len(args.stars)
+    for i, star in enumerate(args.stars):
+        print('{} of {} ({})'.format(i+1, N, star))
         mod1 = CKSStarModel(mist, star)
         mod2 = CKSStarModel(dar, star)
         mod3 = CKSStarModel(mist, star, N=2)
@@ -91,28 +93,28 @@ if __name__=='__main__':
 
         start = time.time()
         try: 
-            fit_model(mod1, dir1, args.overwrite, verbose=args.verbosity)
+            fit_model(mod1, dir1, overwrite=args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (mist-single)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod2, dir2, args.overwrite, verbose=args.verbosity)
+            fit_model(mod2, dir2, overwrite=args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (dar-single)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod3, dir3, args.overwrite, verbose=args.verbosity)
+            fit_model(mod3, dir3, overwrite=args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (mist-binary)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod4, dir4, args.overwrite, verbose=args.verbosity)
+            fit_model(mod4, dir4, overwrite=args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (dar-binary)!'.format(star))
             import traceback
