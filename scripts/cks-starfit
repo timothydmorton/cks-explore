@@ -29,6 +29,7 @@ if __name__=='__main__':
     import sys, os
 
     from astropy import log as logger
+    import logging
 
     sys.path.append('..')
 
