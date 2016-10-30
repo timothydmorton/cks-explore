@@ -11,10 +11,10 @@ Does the following fits for a given CKS star (or list of stars):
 Saves models and figures to $CKSDIR/starmodels/....
 """
 
-def fit_model(mod, directory, overwrite=False):
+def fit_model(mod, directory, **kwargs):
     """Runs fit for mod; writes results/figures appropriately
     """
-    mod.fit(overwrite=overwrite)
+    mod.fit(**kwargs)
     fig1 = mod.corner_physical();
     fig2 = mod.corner_observed();
 
@@ -91,28 +91,28 @@ if __name__=='__main__':
 
         start = time.time()
         try: 
-            fit_model(mod1, dir1, args.overwrite)
+            fit_model(mod1, dir1, args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (mist-single)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod2, dir2, args.overwrite)
+            fit_model(mod2, dir2, args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (dar-single)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod3, dir3, args.overwrite)
+            fit_model(mod3, dir3, args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (mist-binary)!'.format(star))
             import traceback
             traceback.print_exc()
 
         try: 
-            fit_model(mod4, dir4, args.overwrite)
+            fit_model(mod4, dir4, args.overwrite, verbose=args.verbosity)
         except:
             logger.error('Error with {} (dar-binary)!'.format(star))
             import traceback
