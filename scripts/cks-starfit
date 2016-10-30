@@ -34,8 +34,8 @@ if __name__=='__main__':
 
     sys.path.append('..')
 
-    from cks.cfg import DATADIR
-    STARMODELDIR = os.path.join(DATADIR, 'starmodels')
+    from cks.cfg import CKSDIR
+    STARMODELDIR = os.path.join(CKSDIR, 'starmodels')
     if not os.path.exists(STARMODELDIR):
         os.makedirs(STARMODELDIR)
 
@@ -75,9 +75,13 @@ if __name__=='__main__':
     dar = get_ichrone('dartmouth', bands=['J','H','K'])
 
     dir1 = os.path.join(STARMODELDIR, 'mist-single')
+    os.makedirs(dir1)
     dir2 = os.path.join(STARMODELDIR, 'dar-single')
+    os.makedirs(dir2)
     dir3 = os.path.join(STARMODELDIR, 'mist-binary')
+    os.makedirs(dir3)
     dir4 = os.path.join(STARMODELDIR, 'dar-binary')
+    os.makedirs(dir4)
 
     for star in args.stars:
         mod1 = CKSStarModel(mist, star)
@@ -90,21 +94,29 @@ if __name__=='__main__':
             fit_model(mod1, dir1, args.overwrite)
         except:
             logger.error('Error with {} (mist-single)!'.format(star))
+            import traceback
+            traceback.print_exc()
 
         try: 
             fit_model(mod2, dir2, args.overwrite)
         except:
             logger.error('Error with {} (dar-single)!'.format(star))
+            import traceback
+            traceback.print_exc()
 
         try: 
             fit_model(mod3, dir3, args.overwrite)
         except:
             logger.error('Error with {} (mist-binary)!'.format(star))
+            import traceback
+            traceback.print_exc()
 
         try: 
             fit_model(mod4, dir4, args.overwrite)
         except:
             logger.error('Error with {} (dar-binary)!'.format(star))
+            import traceback
+            traceback.print_exc()
 
         end = time.time()
 
