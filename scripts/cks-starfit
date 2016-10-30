@@ -1,0 +1,110 @@
+#! /usr/bin/env python
+"""
+Does the following fits for a given CKS star (or list of stars):
+
+* JHK + spectroscopy (MIST)
+* JHK + spectroscopy (Dartmouth)
+
+* JHK + spectroscopy, binary (MIST)
+* JHK + spectroscopy, binary (Dartmouth)
+
+Saves models and figures to $CKSDIR/starmodels/....
+"""
+
+def fit_model(mod, directory, overwrite=False):
+    """Runs fit for mod; writes results/figures appropriately
+    """
+    mod.fit(overwrite=overwrite)
+    fig1 = mod.corner_physical();
+    fig2 = mod.corner_observed();
+
+    figdir = os.path.join(directory, 'figures')
+    fig1.savefig(os.path.join(figdir, '{}-physical.png'.format(mod.name)))
+    fig2.savefig(os.path.join(figdir, '{}-observed.png'.format(mod.name)))
+
+    modeldir = os.path.join(directory, 'models')
+    mod.save_hdf(os.path.join(modeldir, '{}.h5'.format(mod.name)))
+
+if __name__=='__main__':
+    import sys, os
+
+    from astropy import log as logger
+
+    sys.path.append('..')
+
+    from cks.cfg import DATADIR
+    STARMODELDIR = os.path.join(DATADIR, 'starmodels')
+    if not os.path.exists(STARMODELDIR):
+        os.makedirs(STARMODELDIR)
+
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Fit CKS star(s) with Isochrones')
+
+    parser.add_argument('stars', nargs='*', type=int, help='KOI number(s)')
+    parser.add_argument('-o', '--overwrite', action='set_true')
+
+    vq_group = parser.add_mutually_exclusive_group()
+    vq_group.add_argument('-v', '--verbose', action='count', default=0, dest='verbosity')
+    vq_group.add_argument('-q', '--quiet', action='count', default=0, dest='quietness')
+
+    args = parser.parse_args()
+
+    # Set logger level based on verbose flags
+    if args.verbosity != 0:
+        if args.verbosity == 1:
+            logger.setLevel(logging.DEBUG)
+        else: # anything >= 2
+            logger.setLevel(1)
+
+    elif args.quietness != 0:
+        if args.quietness == 1:
+            logger.setLevel(logging.WARNING)
+        else: # anything >= 2
+            logger.setLevel(logging.ERROR)
+
+    else: # default
+        logger.setLevel(logging.INFO)
+
+    from isochrones import get_ichrone
+    from cks.model import CKSStarModel
+
+    mist = get_ichrone('mist', bands=['J','H','K'])
+    dar = get_ichrone('dartmouth', bands=['J','H','K'])
+
+    dir1 = os.path.join(STARMODELDIR, 'mist-single')
+    dir2 = os.path.join(STARMODELDIR, 'dar-single')
+    dir3 = os.path.join(STARMODELDIR, 'mist-binary')
+    dir4 = os.path.join(STARMODELDIR, 'dar-binary')
+
+    for star in args.stars:
+        mod1 = CKSStarModel(mist, star)
+        mod2 = CKSStarModel(dar, star)
+        mod3 = CKSStarModel(mist, star, N=2)
+        mod4 = CKSStarModel(dar, star, N=2)
+
+        start = time.time()
+        try: 
+            fit_model(mod1, dir1, args.overwrite)
+        except:
+            logger.error('Error with {} (mist-single)!'.format(star))
+
+        try: 
+            fit_model(mod2, dir2, args.overwrite)
+        except:
+            logger.error('Error with {} (dar-single)!'.format(star))
+
+        try: 
+            fit_model(mod3, dir3, args.overwrite)
+        except:
+            logger.error('Error with {} (mist-binary)!'.format(star))
+
+        try: 
+            fit_model(mod4, dir4, args.overwrite)
+        except:
+            logger.error('Error with {} (dar-binary)!'.format(star))
+
+        end = time.time()
+
+        print('Four model fits took {:.2f} minutes.'.format((end-start)/60.))
+
