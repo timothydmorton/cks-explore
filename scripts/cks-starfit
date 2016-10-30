@@ -49,6 +49,7 @@ if __name__=='__main__':
 
     parser.add_argument('stars', nargs='*', type=int, help='KOI number(s)')
     parser.add_argument('-o', '--overwrite', action='store_true')
+    parser.add_argument('--do_binary', action='store_true')
 
     vq_group = parser.add_mutually_exclusive_group()
     vq_group.add_argument('-v', '--verbose', action='count', default=0, dest='verbosity')
@@ -96,8 +97,9 @@ if __name__=='__main__':
         print('{} of {} ({})'.format(i+1, N, star))
         mod1 = CKSStarModel(mist, star)
         mod2 = CKSStarModel(dar, star)
-        mod3 = CKSStarModel(mist, star, N=2)
-        mod4 = CKSStarModel(dar, star, N=2)
+        if args.do_binary:
+            mod3 = CKSStarModel(mist, star, N=2)
+            mod4 = CKSStarModel(dar, star, N=2)
 
         start = time.time()
         try: 
@@ -114,21 +116,22 @@ if __name__=='__main__':
             import traceback
             traceback.print_exc()
 
-        try: 
-            fit_model(mod3, dir3, overwrite=args.overwrite, verbose=args.verbosity)
-        except:
-            logger.error('Error with {} (mist-binary)!'.format(star))
-            import traceback
-            traceback.print_exc()
+        if args.do_binary:
+            try: 
+                fit_model(mod3, dir3, overwrite=args.overwrite, verbose=args.verbosity)
+            except:
+                logger.error('Error with {} (mist-binary)!'.format(star))
+                import traceback
+                traceback.print_exc()
 
-        try: 
-            fit_model(mod4, dir4, overwrite=args.overwrite, verbose=args.verbosity)
-        except:
-            logger.error('Error with {} (dar-binary)!'.format(star))
-            import traceback
-            traceback.print_exc()
+            try: 
+                fit_model(mod4, dir4, overwrite=args.overwrite, verbose=args.verbosity)
+            except:
+                logger.error('Error with {} (dar-binary)!'.format(star))
+                import traceback
+                traceback.print_exc()
 
         end = time.time()
 
-        print('Four model fits took {:.2f} minutes.'.format((end-start)/60.))
+        print('All model fits took {:.2f} minutes.'.format((end-start)/60.))
 
