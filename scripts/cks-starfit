@@ -45,6 +45,8 @@ if __name__=='__main__':
     import logging
     import time
 
+    import tables
+
     sys.path.append('..')
 
     from cks.cfg import CKSDIR
@@ -139,8 +141,8 @@ if __name__=='__main__':
                 logger.error('Error with {} (dar-binary)!'.format(star))
                 import traceback
                 traceback.print_exc()
-
         end = time.time()
 
         print('All model fits took {:.2f} minutes.'.format((end-start)/60.))
+        tables.file._open_files.close_all()
 
