@@ -14,6 +14,15 @@ Saves models and figures to $CKSDIR/starmodels/....
 def fit_model(mod, directory, **kwargs):
     """Runs fit for mod; writes results/figures appropriately
     """
+    modeldir = os.path.join(directory, 'models')
+    figdir = os.path.join(directory, 'figures')
+
+    if 'overwrite' not in kwargs or not kwargs['overwrite']:
+        if (os.path.exists(os.path.join(modeldir, '{}.h5'.format(mod.name))) and
+            os.path.exists(os.path.join(figdir, '{}-physical.png'.format(mod.name))) and
+            os.path.exists(os.path.join(figdir, '{}-observed.png'.format(mod.name)))):
+            return
+
     mod.fit(**kwargs)
     fig1 = mod.corner_physical();
     fig2 = mod.corner_observed();
