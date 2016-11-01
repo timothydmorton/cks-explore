@@ -17,8 +17,14 @@ def get_quantiles(name, directory, columns=['mass','radius','Teff',
     """
     
     # mod = StarModel.load_hdf(os.path.join(directory, '{}.h5'.format(name)))
-    samples = pd.read_hdf(os.path.join(directory, '{}.h5'.format(name)), 'samples')
-    # Get actual column names
+    h5filename = os.path.join(directory, '{}.h5'.format(name))
+    try:
+        samples = pd.read_hdf(h5filename, 'samples')
+    except KeyError:
+        logging.error('Cannot load "samples" from {}'.format(h5filename))
+        return pd.DataFrame()
+
+    # Get actual column names    
     true_cols = []
     for c1 in samples.columns:
         for c2 in columns:
