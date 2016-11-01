@@ -73,7 +73,7 @@ def make_summary_df(directory, processes=1, filename=None, **kwargs):
 
     df = pd.concat(dfs)
     if filename is None:
-        filename = os.path.join(CKSDIR, '{}_summary.h5'.format(directory))
+        filename = os.path.join(CKSDIR, 'starmodels', '{}_summary.h5'.format(directory))
     df = df.sort_index()
     df.to_hdf(filename, 'df')
 
